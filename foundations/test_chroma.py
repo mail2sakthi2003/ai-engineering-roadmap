@@ -1,3 +1,23 @@
+# Hands-On with Chroma (Your Local Vector Database)
+
+# Yesterday you saw the raw math (embeddings + cosine similarity) done by hand. 
+# Today you'll see how Chroma wraps that into an actual database — one that stores documents,
+# remembers them across runs, and does the similarity search for you automatically.
+
+# Concept: what Chroma actually is
+
+# Think of it like a regular database, but instead of WHERE id = 5, you query
+# with WHERE meaning is similar to "X". Under the hood it's doing exactly the embed-and-compare'
+# ' math you saw yesterday — it just handles storage, indexing, and persistence so you don't have to.
+
+# Two important pieces:
+
+# PersistentClient — tells Chroma to save everything to a folder on disk (./chroma_db), 
+# so your data survives between script runs. (There's also an in-memory client for quick throwaway tests, 
+# but we want persistence since this is the DB your RAG bot will actually query next week.)
+# Collection — like a table. You can have multiple collections for different projects/purposes.
+
+
 from chromadb import PersistentClient
 from chromadb.utils import embedding_functions
 
@@ -48,3 +68,9 @@ for doc, distance, meta in zip(
     results["metadatas"][0]
 ):
     print(f"  [{distance:.4f}] ({meta['topic']}) {doc}")
+
+#     OUTPUT:
+#     Top matches:
+#   [0.4684] (unrelated) Cats are independent animals that sleep up to 16 hours a day.
+#   [0.9384] (networking) AWS RAM lets you share resources like subnets and Transit Gateway attachments across accounts without duplicating infrastructure.
+#   [0.9449] (iac) Terraform modules let you package reusable infrastructure-as-code components for consistent multi-cloud deployments.
